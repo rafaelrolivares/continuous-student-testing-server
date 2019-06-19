@@ -1,40 +1,29 @@
 const Sequelize = require('sequelize')
-const sequelize = require('../../db')
+const sequelize = require('../db')
+const Student = require('../students/model')
 
 const Response = sequelize.define('responses', {
-  git_name: {
-    type: Sequelize.STRING,
-    field: 'git_name',
-    allowNull: false
+   passed: {
+    type: Sequelize.BOOLEAN,
+    allowNull: false,
+    defaultValue: false
+  
   },
-  git_email: {
-    type: Sequelize.STRING,
-    field: 'git_email',
-    allowNull: false
+  attempted: {
+    type: Sequelize.BOOLEAN,
+    allowNull: false,
+    defaultValue: false
   },
-   numFailedTests: {
+  attemptsCount: {
     type: Sequelize.INTEGER,
-    field: 'numFailedTests',
-    allowNull: false
-  },
-  numPassedTests: {
-    type: Sequelize.INTEGER,
-    field: 'numFailedTests',
-    allowNull: false
-  },
-  numPendingTests: {
-    type: Sequelize.INTEGER,
-    field: 'numFailedTests',
-    allowNull: false
-  },
-  created_at: {
-    type: 'TIMESTAMP',
-    defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+    field: 'attempts_count',
     allowNull: false
   }
 }, {
-  tableName: 'responses'
+  tableName: 'responses',
+  timestamps: true
 })
 
-
+Response.belongsTo(Student)
+Student.hasMany(Response)
 module.exports = Response

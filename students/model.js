@@ -2,12 +2,12 @@ const Sequelize = require('sequelize')
 const sequelize = require('../db')
 
 const Student = sequelize.define('students', {
-  git_name: {
+  gitName: {
     type: Sequelize.STRING,
     field: 'git_name',
     allowNull: false
   },
-  git_email: {
+  gitEmail: {
     type: Sequelize.STRING,
     field: 'git_email',
     allowNull: false

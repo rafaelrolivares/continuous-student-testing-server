@@ -1,10 +1,10 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors')
-//const question = require('./questions/model')
-//const response = require('./responses/model')
-//const student = require('./students/model')
-const testRouter = require('./tests/routes')
+const question = require('./questions/routes')
+const evaluation = require('./evaluations/routes')
+const student = require('./students/routes')
+const test = require('./tests/routes')
 
 const app = express()
 
@@ -13,7 +13,7 @@ const port = process.env.PORT || 4000
 app
   .use(cors())
   .use(bodyParser.json())
-  .use(testRouter)
+  .use(evaluation, student, question, test)
 
 
 function onListen() {

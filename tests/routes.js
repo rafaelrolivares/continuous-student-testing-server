@@ -34,7 +34,7 @@ router.get('/tests', (req, res, next) => {
 
 router.get('/tests/:id', (req, res) => {
   const id = req.params.id
-  Test.findByPk(id)
+  Test.findByPk(id, include [Question])
   .then(test => {
     res.json({ test: test })
   })
@@ -57,6 +57,14 @@ router.put('/tests/:id', (req, res, next) => {
       message: 'Something went wrong'
     })
   })
+})
+
+router.delete('/tests/:id', (req, res, next) => {
+  const id = req.params.id
+  Test.findByPk(id)
+  .then(test => test.destroy())
+  .then(res.json({ message: `Test deleted` }))
+  .catch(error => next(error))
 })
 
 module.exports = router

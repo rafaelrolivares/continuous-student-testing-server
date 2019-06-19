@@ -14,6 +14,7 @@ const Test = sequelize.define('tests', {
 },{
   timestamps: false,
   tableName: 'tests'
+
 })
 
 module.exports = Test

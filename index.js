@@ -1,5 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const RawData = require('./raw_data/model')
 
 
 
@@ -10,6 +11,7 @@ const port = process.env.PORT || 4000
 app
   .use(cors())
   .use(bodyParser.json())
+  .use(RawData)
 
 
 function onListen() {

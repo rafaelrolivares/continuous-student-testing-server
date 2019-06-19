@@ -14,14 +14,14 @@ router.get('/raw_data',(req, res ) => {
 
 router.post('/raw_data', (req, res) => {
   RawData
-    .create(req.body)
+    .create({data:req.body})
     .then(data => {
       if (!data) {
         return res.status(404).send({
           message: 'could not find the data'
         })
       } 
-      res.send(data)
+      res.send({message:'data is stored in the db'})
     })
     .catch(console.error)
 })

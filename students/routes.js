@@ -25,7 +25,7 @@ router.post('/students', (req, res, next) => {
 })
 
 router.get('/students', (req, res, next) => { 
-  Student.findAll({order:[['id', 'DESC']]})
+  Student.findAll({order:[['id', 'ASC']]})
   .then(students => {
     res.json({ students: students })
   })
@@ -50,7 +50,7 @@ router.put('/students/:id', (req, res, next) => {
   Student.findByPk(id)
   .then(student => student.update(req.body))
   .then(student => {
-    res.json({ message: `student updated: ${student.message} ` })
+    res.json({ message: `Student ${student.name} updated.` })
 })
   .catch(err => {
     res.status(500).json({

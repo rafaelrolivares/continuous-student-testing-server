@@ -1,5 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const RawDataRouter = require('./raw_data/routes')
 const cors = require('cors')
 const question = require('./questions/routes')
 const evaluation = require('./evaluations/routes')
@@ -13,7 +14,7 @@ const port = process.env.PORT || 4000
 app
   .use(cors())
   .use(bodyParser.json())
-  .use(evaluation, student, question, test)
+  .use(evaluation, student, question, test, RawDataRouter)
 
 
 function onListen() {

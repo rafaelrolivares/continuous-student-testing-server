@@ -13,7 +13,7 @@ const Test = sequelize.define('tests', {
   }
 },{
   timestamps: false,
-  tableName: 'questions'
+  tableName: 'tests'
 })
 
 module.exports = Test

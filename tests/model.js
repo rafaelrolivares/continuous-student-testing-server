@@ -1,7 +1,7 @@
 const Sequelize = require('sequelize')
 const sequelize = require('../db')
 
-const Test = Sequelize.define('tests', {
+const Test = sequelize.define('tests', {
   name: {
     type: Sequelize.STRING,
     allowNull: false
@@ -15,3 +15,5 @@ const Test = Sequelize.define('tests', {
   timestamps: false,
   tableName: 'questions'
 })
+
+module.exports = Test

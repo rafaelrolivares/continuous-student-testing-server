@@ -4,7 +4,7 @@ const sequelize = require('../db')
 const Test = sequelize.define('tests', {
   name: {
     type: Sequelize.STRING,
-    allowNull: false
+    allowNull: true
   },
   packageVersion: {
     type: Sequelize.STRING,

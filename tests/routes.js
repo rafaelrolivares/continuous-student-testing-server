@@ -1,6 +1,7 @@
 const { Router } = require('express')
 const bodyParser = require('body-parser')
 const Test = require('./model')
+const Question = require('../questions/model')
 
 const cors = require('cors')
 const router = new Router()
@@ -25,7 +26,7 @@ router.post('/tests', (req, res, next) => {
 })
 
 router.get('/tests', (req, res, next) => { 
-  Test.findAll({order:[['id', 'DESC']]})
+  Test.findAll({order:[['id', 'ASC']]})
   .then(tests => {
     res.json({ tests: tests })
   })
@@ -34,7 +35,7 @@ router.get('/tests', (req, res, next) => {
 
 router.get('/tests/:id', (req, res) => {
   const id = req.params.id
-  Test.findByPk(id, include [Question])
+  Test.findByPk(id, { include: [Question] })
   .then(test => {
     res.json({ test: test })
   })
@@ -50,7 +51,7 @@ router.put('/tests/:id', (req, res, next) => {
   Test.findByPk(id)
   .then(test => test.update(req.body))
   .then(test => {
-    res.json({ message: `test updated: ${test.message} ` })
+    res.json({ message: `Test updated: ${test.name} ` })
 })
   .catch(err => {
     res.status(500).json({

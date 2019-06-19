@@ -2,7 +2,7 @@ const { Router } = require('express')
 const bodyParser = require('body-parser')
 const Question = require('./model')
 const Evaluation = require('../evaluations/model')
-const Test = require 
+const Test = require('../tests/model')
 const cors = require('cors')
 const router = new Router()
 
@@ -26,7 +26,7 @@ router.post('/questions', (req, res, next) => {
 })
 
 router.get('/questions', (req, res, next) => { 
-  Question.findAll({order:[['id', 'DESC']]})
+  Question.findAll({order:[['id', 'ASC']]})
   .then(questions => {
     res.json({ questions: questions })
   })
@@ -35,7 +35,7 @@ router.get('/questions', (req, res, next) => {
 
 router.get('/questions/:id', (req, res) => {
   const id = req.params.id
-  Question.findByPk(id, include [Test])
+  Question.findByPk(id, { include: [Test] })
   .then(question => {
     res.json({ question: question })
   })
@@ -48,10 +48,10 @@ router.get('/questions/:id', (req, res) => {
 
 router.put('/questions/:id', (req, res, next) => {
   const id = req.params.id
-  Question.findByPk(id, include [Evaluation])
+  Question.findByPk(id)
   .then(question => question.update(req.body))
   .then(question => {
-    res.json({ message: `question updated: ${question.message} ` })
+    res.json({ message: `Question updated: key: ${question.key}; testId: ${question.testId} ` })
 })
   .catch(err => {
     res.status(500).json({

@@ -1,13 +1,13 @@
 const Sequelize = require('sequelize')
 const sequelize = require('../db')
 const Student = require('../students/model')
+const Question = require('../questions/model')
 
-const Response = sequelize.define('responses', {
+const Evaluation = sequelize.define('evaluations', {
    passed: {
     type: Sequelize.BOOLEAN,
     allowNull: false,
     defaultValue: false
-  
   },
   attempted: {
     type: Sequelize.BOOLEAN,
@@ -20,10 +20,14 @@ const Response = sequelize.define('responses', {
     allowNull: false
   }
 }, {
-  tableName: 'responses',
+  tableName: 'evaluations',
   timestamps: true
 })
 
-Response.belongsTo(Student)
-Student.hasMany(Response)
-module.exports = Response
+Evaluation.belongsTo(Student)
+Student.hasMany(Evaluation)
+
+// Question.belongsTo(Evaluation)
+// Question.hasMany(Evaluation)
+
+module.exports = Evaluation

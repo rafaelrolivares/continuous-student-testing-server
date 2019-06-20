@@ -26,8 +26,13 @@ const Evaluation = sequelize.define('evaluations', {
 
 Evaluation.belongsTo(Student)
 Student.hasMany(Evaluation)
+<<<<<<< HEAD:evaluations/model.js
 
 // Question.belongsTo(Evaluation)
 // Question.hasMany(Evaluation)
 
+=======
+Evaluation.belongsTo(Question)
+Question.hasMany(Evaluation)
+>>>>>>> 132c391ecbced69c19cc78c818ad0deedcf7b4a2:evaluations/model.js
 module.exports = Evaluation

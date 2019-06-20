@@ -7,18 +7,21 @@ const Question = require('../questions/model');
 
 router.get('/evaluations', (req, res, next) => {
   Evaluation
-    .findAll({
-      include: [{ model: Student }, { model: Question }]
-    })
-    .then(reponses => {
-      res.send({ reponses })
+    .findAll(   
+      {include: [{ model: Student, attributes: [
+        ['git_name', 'gitName']
+      ]} , { model: Question }]
+    , order:[['updatedAt', 'DESC']]})
+    .then(evaluations => {
+      res.send({ evaluations })
     })
     .catch(error => next(error))
 })
 
 router.get('/evaluations/:id', (req, res, next) => {
+  const id = req.params.id
   Evaluation
-    .findByPk(req.params.id)
+    .findByPk(id)
     .then(evaluation => {
       if (!evaluation) {
         return res.status(404).send({
@@ -34,7 +37,9 @@ router.post('/evaluations', (req, res, next) => {
   const evaluation = {
     passed: req.body.passed,
     attempted: req.body.attempted,
-    attemptsCount: req.body.attemptsCount
+    attemptsCount: req.body.attemptsCount,
+    studentId: req.body.studentId,
+    questionId: req.body.questionId
   }
 
   Evaluation

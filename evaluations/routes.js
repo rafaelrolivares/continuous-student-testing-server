@@ -62,29 +62,60 @@ router.post('/evaluations', (req, res, next) => {
     gitEmail: req.body.gitEmail
   }
   // const exercisesArray = req.body.evaluation.questions.map(question => question.exercise)
-  // const { evaluation } = req.body
+  let  evaluation  = req.body.evaluation
+  console.log('evaluation:', evaluation)
 
-  // let attemptsCount = 0
-  // let studentId = 1
+  let attemptsCount = 1
+  // let studentId 
+
   // let questionId = 1
 
-  // evaluation = {
-  //       passed,
-  //       attempted,
-  //       attemptsCount,
-  //       studentId,
-  //       questionId
-  //     }
+   evaluation = {
+    //  questions
+        // passed,
+        // attempted,
+        attemptsCount,
+        // studentId,
+        // questionId
+      }
+
   Student
     .findOrCreate({where: {gitEmail: student.gitEmail}, defaults: {gitName: student.gitName}})
     .then(([student, created]) => {
-      // console.log(student.get({
-      //   plain: true
-      // }))
+      const newEvaluation = { ...evaluation, studentId: student.id }
+      console.log('newEvaluation:',newEvaluation)
       console.log('student:', student)
       console.log(created)
     })
 
+    // router.post('/items', (req, res, next) => {
+    //   User.create(req.body).then(result => {
+    //     const newItem = { ...req.body, userId: result.dataValues.id }
+    // newItem{
+    //   title:Number,
+    //   dec,
+    //   name:fgf,
+    //   email:dfgd,
+    //   userId
+    // }
+    //     Item
+    //       .create(newItem)
+    //       .then(item => {
+    
+    //         if (!item) {
+    //           return res.status(404).send({
+    //             message: `Item does not exist`
+    //           })
+    //         }
+    //         return res.status(201).send(item)
+    //       })
+    //       .catch(error => {
+    //         console.log(error)
+    //         next(error)
+    //       })
+    //   })
+    // })
+    ///////////////
   // Evaluation
   //   .create(evaluation)
   //   .then(evaluation => {

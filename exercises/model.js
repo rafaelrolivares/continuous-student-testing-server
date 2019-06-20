@@ -9,7 +9,7 @@ const Exercise = sequelize.define('exercises', {
   packageVersion: {
     type: Sequelize.STRING,
     field: 'package_version',
-    allowNull: false
+    allowNull: true
   }
 },{
   timestamps: false,

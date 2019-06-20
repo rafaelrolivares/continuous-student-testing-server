@@ -16,7 +16,6 @@ app
   .use(bodyParser.json())
   .use(evaluation, student, question, test, RawDataRouter)
 
-
 function onListen() {
   console.log(`Running on port ${port}`)
 }

@@ -3,6 +3,7 @@ const router = new Router();
 const Evaluation = require('./model');
 const Student = require('../students/model');
 const Question = require('../questions/model');
+const Exercise = require('../exercises/model')
 
 router.get('/evaluations', (req, res, next) => {
   Evaluation
@@ -32,33 +33,13 @@ router.get('/evaluations/:id', (req, res, next) => {
     .catch(error => next(error))
 })
 
-router.post('/evaluations', (req, res, next) => {
-  const evaluation = {
-    passed: req.body.passed,
-    attempted: req.body.attempted,
-    attemptsCount: req.body.attemptsCount,
-    studentId: req.body.studentId,
-    questionId: req.body.questionId
-  }
-
-  Evaluation
-    .create(evaluation)
-    .then(evaluation => {
-      if (!evaluation) {
-        return res.status(400).send({
-          message: `evaluation has not been created`
-        })
-      }
-      return res.status(201).send(evaluation)
-    })
-    .catch(error => next(error))
-  })
-
 // router.post('/evaluations', (req, res, next) => {
 //   const evaluation = {
 //     passed: req.body.passed,
 //     attempted: req.body.attempted,
-//     attemptsCount: req.body.attemptsCount
+//     attemptsCount: req.body.attemptsCount,
+//     studentId: req.body.studentId,
+//     questionId: req.body.questionId
 //   }
 
 //   Evaluation
@@ -66,32 +47,75 @@ router.post('/evaluations', (req, res, next) => {
 //     .then(evaluation => {
 //       if (!evaluation) {
 //         return res.status(400).send({
-//           message: `Evaluation has not been created`
+//           message: `evaluation has not been created`
 //         })
 //       }
-
-//       Student
-//         .findByPk(req.body.student_id)
-//         .then(student => {
-//           evaluation
-//             .setStudent(student)
-//             .then(() => {
-              
-//               Question
-//                 .findByPk(req.body.question_id)
-//                 .then(question => {
-//                   evaluation
-//                     .setQuestion(question)
-//                     .then(() => {
-//                       question
-
-//                       return res.status(201).send(evaluation)
-//                     })
-//                   })
-//               })
-//           })
-//       })
+//       return res.status(201).send(evaluation)
+//     })
 //     .catch(error => next(error))
 //   })
+
+router.post('/evaluations', (req, res, next) => {
+  const day = req.body.day
+  const student = {
+    gitName:req.body.gitName,
+    gitEmail: req.body.gitEmail
+  }
+  // const exercisesArray = req.body.evaluation.questions.map(question => question.exercise)
+  // const { evaluation } = req.body
+
+  // let attemptsCount = 0
+  // let studentId = 1
+  // let questionId = 1
+
+  // evaluation = {
+  //       passed,
+  //       attempted,
+  //       attemptsCount,
+  //       studentId,
+  //       questionId
+  //     }
+  Student
+    .findOrCreate({where: {gitEmail: student.gitEmail}, defaults: {gitName: student.gitName}})
+    .then(([student, created]) => {
+      // console.log(student.get({
+      //   plain: true
+      // }))
+      console.log('student:', student)
+      console.log(created)
+    })
+
+  // Evaluation
+  //   .create(evaluation)
+  //   .then(evaluation => {
+  //     if (!evaluation) {
+  //       return res.status(400).send({
+  //         message: `Evaluation has not been created`
+  //       })
+  //     }
+
+  //     Student
+  //       .findByPk(req.body.student_id)
+  //       .then(student => {
+  //         evaluation
+  //           .setStudent(student)
+  //           .then(() => {
+              
+  //             Question
+  //               .findByPk(req.body.question_id)
+  //               .then(question => {
+  //                 evaluation
+  //                   .setQuestion(question)
+  //                   .then(() => {
+  //                     question
+
+  //                     return res.status(201).send(evaluation)
+  //                   })
+  //                 })
+  //             })
+  //         })
+  //     })
+  //   .catch(error => next(error))
+  })
 
 module.exports = router

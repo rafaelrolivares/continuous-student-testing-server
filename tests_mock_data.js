@@ -20,12 +20,13 @@ http :4000/evaluations studentId=2 questionId=2 passed=true attempted=true attem
 http :4000/evaluations studentId=2 questionId=3 passed=false attempted=true attemptsCount=4
 http :4000/evaluations studentId=3 questionId=1 passed=true attempted=true attemptsCount=3
 http :4000/evaluations studentId=3 questionId=2 passed=false attempted=false attemptsCount=3
-http :4000/evaluations day='data-transformations@1.0.0' gitName='kerenKi' gitEmail='kkinberg13@gmail.com' evaluation="{questions:[{ exercise: 'Array methods: map, filter & find: ',
+http :4000/evaluations day='data-transformations@1.0.0' gitName='kerenKi' gitEmail='kkinberg13@gmail.com' evaluation=[{ exercise: 'Array methods: map, filter & find: ',
 attempted: true,
 passed: true,
 key: '[B] getPokemonById: Gets a pokemon object by their id',
 failureMessages: [],
-meta: { learning_goals: [Array] } },
+meta: { learning_goals: [Array] } 
+},
 { exercise: 'Array methods: map, filter & find: ',
 attempted: false,
 passed: false,
@@ -39,36 +40,20 @@ passed: false,
 key:
  '[D] getMidSizedPokemon: Gets the pokemon that weighs \"38.0 kg\"',
 failureMessages: [],
-meta: { learning_goals: [Array] } }]}"
+meta: { learning_goals: [Array] } }]
 
 
-
-
-{ evaluator: 'STUDENT_LOCAL_JEST_RUN',
-  day: 'data-transformations@1.0.0',
-  context: '(unknown)',
-  input: '(unknown)',
-  git_name: 'kerenKi',
-  git_email: 'kkinberg13@gmail.com',
-  evaluation: [ { key: 'ROOT', questions: [Array], score: 2 } ] }
-
+http :4000/evaluations day='data-transformations@1.0.0' gitName='kerenKi' gitEmail='kkinberg13@gmail.com' evaluation=[ { exercise: 'Array methods: map, filter & find: ',
+    attempted: true,
+    passed: true,
+    key:
+     '[A] getPokeNames: Transforms an array of pokemons into an array of pokemon names',
+    failureMessages: [],
+    meta: { learning_goals: [Array] } },
   { exercise: 'Array methods: map, filter & find: ',
     attempted: true,
     passed: true,
     key: '[B] getPokemonById: Gets a pokemon object by their id',
     failureMessages: [],
-    meta: { learning_goals: [Array] } },
-  { exercise: 'Array methods: map, filter & find: ',
-    attempted: false,
-    passed: false,
-    key:
-     '[C] getRarePokemons: Transforms an array of pokemon into an array of "rare" (spawn_chance is less than 0.1) pokemon',
-    failureMessages: [],
-    meta: { learning_goals: [Array] } },
-  { exercise: 'Array methods: map, filter & find: ',
-    attempted: false,
-    passed: false,
-    key:
-     '[D] getMidSizedPokemon: Gets the pokemon that weighs "38.0 kg"',
-    failureMessages: [],
-    meta: { learning_goals: [Array] } },
+    meta: { learning_goals: [Array] } }]
+

@@ -61,9 +61,17 @@ router.post('/evaluations', (req, res, next) => {
     gitName:req.body.gitName,
     gitEmail: req.body.gitEmail
   }
-  // const exercisesArray = req.body.evaluation.questions.map(question => question.exercise)
-  let  evaluation  = req.body.evaluation
-  console.log('evaluation:', evaluation)
+
+  console.log("req.body.evaluation:", req.body.evaluation)
+
+  let evaluationArray = JSON.parse(JSON.stringify(req.body.evaluation))
+
+  const exercisesArray = evaluationArray.map(question => {
+    console.log('exercise name:',question.exercise)
+    return question.exercise
+  })
+
+  console.log('exercisesArray:', exercisesArray)
 
   let attemptsCount = 1
   // let studentId 
@@ -81,12 +89,14 @@ router.post('/evaluations', (req, res, next) => {
 
   Student
     .findOrCreate({where: {gitEmail: student.gitEmail}, defaults: {gitName: student.gitName}})
-    .then(([student, created]) => {
+    .then(([student]) => {
       const newEvaluation = { ...evaluation, studentId: student.id }
       console.log('newEvaluation:',newEvaluation)
-      console.log('student:', student)
-      console.log(created)
     })
+    .catch(next)
+
+  // Exercise
+  //   .findOrCreate({where: {gitEmail: student.gitEmail}, defaults: {gitName: student.gitName}})  
 
     // router.post('/items', (req, res, next) => {
     //   User.create(req.body).then(result => {

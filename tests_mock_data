@@ -4,13 +4,13 @@ http :4000/students gitName=andrea gitEmail=andrea@github.com
 http :4000/students gitName=keren gitEmail=keren@github.com
 http :4000/students gitName=rafael gitEmail=rafael@github.com
 
-http :4000/tests name='Map-filter-find' packageVersion='0.0.1'
-http :4000/tests name='Reduce' packageVersion='0.0.1'
-http :4000/tests name='Data-mining' packageVersion='0.0.1'
+http :4000/exercises name='Map-filter-find' packageVersion='0.0.1'
+http :4000/exercises name='Reduce' packageVersion='0.0.1'
+http :4000/exercises name='Data-mining' packageVersion='0.0.1'
 
-http :4000/questions key="[A] Find the heaviest Pokemon" testId=1
-http :4000/questions key="[B] Get a pokemon object by their id" testId=2
-http :4000/questions key="[C] Transforms an array of pokemon into an array of "rare" pokemon" testId=3
+http :4000/questions key="[A] Find the heaviest Pokemon" exerciseId=1
+http :4000/questions key="[B] Get a pokemon object by their id" exerciseId=2
+http :4000/questions key="[C] Transforms an array of pokemon into an array of "rare" pokemon" exerciseId=3
 
 http :4000/evaluations studentId=1 questionId=1 passed=true attempted=true attemptsCount=3
 http :4000/evaluations studentId=1 questionId=2 passed=false attempted=true attemptsCount=5

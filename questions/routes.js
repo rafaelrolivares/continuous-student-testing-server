@@ -2,7 +2,7 @@ const { Router } = require('express')
 const bodyParser = require('body-parser')
 const Question = require('./model')
 const Evaluation = require('../evaluations/model')
-const Test = require('../tests/model')
+const Exercise = require('../exercises/model')
 const cors = require('cors')
 const router = new Router()
 
@@ -12,7 +12,7 @@ router.use(bodyParser.json())
 router.post('/questions', (req, res, next) => {
   const question = {
     key: req.body.key,
-    testId: req.body.testId
+    exerciseId: req.body.exerciseId
 }
   Question
     .create(question)
@@ -35,7 +35,7 @@ router.get('/questions', (req, res, next) => {
 
 router.get('/questions/:id', (req, res) => {
   const id = req.params.id
-  Question.findByPk(id, { include: [Test] })
+  Question.findByPk(id, { include: [Exercise] })
   .then(question => {
     res.json({ question: question })
   })
@@ -51,7 +51,7 @@ router.put('/questions/:id', (req, res, next) => {
   Question.findByPk(id)
   .then(question => question.update(req.body))
   .then(question => {
-    res.json({ message: `Question updated: key: ${question.key}; testId: ${question.testId} ` })
+    res.json({ message: `Question updated: key: ${question.key}; exerciseId: ${question.exerciseId} ` })
 })
   .catch(err => {
     res.status(500).json({

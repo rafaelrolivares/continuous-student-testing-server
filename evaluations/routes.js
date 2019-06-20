@@ -6,9 +6,11 @@ const Question = require('../questions/model');
 
 router.get('/evaluations', (req, res, next) => {
   Evaluation
-    .findAll({
-      include: [{ model: Student }, { model: Question }]
-    })
+    .findAll(   
+      {include: [{ model: Student, attributes: [
+        ['git_name', 'gitName']
+      ]} , { model: Question }]
+    , order:[['updatedAt', 'DESC']]})
     .then(evaluations => {
       res.send({ evaluations })
     })
@@ -16,8 +18,9 @@ router.get('/evaluations', (req, res, next) => {
 })
 
 router.get('/evaluations/:id', (req, res, next) => {
+  const id = req.params.id
   Evaluation
-    .findByPk(req.params.id)
+    .findByPk(id)
     .then(evaluation => {
       if (!evaluation) {
         return res.status(404).send({

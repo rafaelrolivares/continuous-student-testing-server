@@ -1,6 +1,6 @@
 const Sequelize = require('sequelize')
 const sequelize = require('../db')
-const Test = require('../tests/model')
+const Exercise = require('../exercises/model')
 
 const Question = sequelize.define('questions', {
   key: {
@@ -13,7 +13,7 @@ const Question = sequelize.define('questions', {
   tableName: 'questions'
 })
 
-Question.belongsTo(Test)
-Test.hasMany(Question)
+Question.belongsTo(Exercise)
+Exercise.hasMany(Question)
 
 module.exports = Question

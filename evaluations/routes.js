@@ -67,11 +67,23 @@ router.post('/evaluations', (req, res, next) => {
   let evaluationArray = JSON.parse(JSON.stringify(req.body.evaluation))
 
   const exercisesArray = evaluationArray.map(question => {
-    console.log('exercise name:',question.exercise)
     return question.exercise
   })
 
   console.log('exercisesArray:', exercisesArray)
+
+  const exercisesUnique = exercisesArray.filter(function(question, index){
+    return exercisesArray.indexOf(question) >= index;
+})
+
+console.log('exercisesUnique:', exercisesUnique)
+
+const createExercise = exercisesUnique.map(exercise => {
+  Exercise
+  .findOrCreate({ where: {name: exercise, packageVersion: day} })  
+  .then( exercise => console.log('created exercise:', exercise) )
+})
+
 
   let attemptsCount = 1
   // let studentId 
@@ -90,8 +102,10 @@ router.post('/evaluations', (req, res, next) => {
   Student
     .findOrCreate({where: {gitEmail: student.gitEmail}, defaults: {gitName: student.gitName}})
     .then(([student]) => {
-      const newEvaluation = { ...evaluation, studentId: student.id }
-      console.log('newEvaluation:',newEvaluation)
+      // const newEvaluation = { ...evaluation, studentId: student.id }
+      console.log('student.id :',student.id )
+      return student.id 
+
     })
     .catch(next)
 

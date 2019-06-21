@@ -53,13 +53,22 @@ router.post('/evaluations', (req, res, next) => {
         //questionId
       }
   console.log('evaluation 1:', evaluation)
-  // console.log("req.body.evaluation:", req.body.evaluation)
+  console.log("req.body.evaluation:", req.body.evaluation)
 
   const evaluationArray = JSON.parse(JSON.stringify(req.body.evaluation))
 
   const exercisesArray = evaluationArray.map(question => {
     return question.exercise
   })
+
+  const questionsArray = evaluationArray.map(question => {
+    return {
+      exercise: question.exercise,
+      key: question.key
+      }
+  })
+
+  console.log('questionsArray', questionsArray)
 
   const exercisesUnique = exercisesArray.filter(function(question, index){
     return exercisesArray.indexOf(question) >= index;
@@ -72,20 +81,18 @@ const createExercise = exercisesUnique.map(exercise => {
  return Exercise
   .findOrCreate({ where: {name: exercise, packageVersion: day} })  
   .then( exercise =>  {
-    console.log('exercise:', exercise)
+    // console.log('exercise:', exercise)
     return exercise
   })
 })
 
-// createExercise === [Promise, Promise]
 
-console.log('createExercise array:', createExercise)
+// console.log('createExercise array:', createExercise)
 
 //Writing the student info to the db
 const createStudent = Student
     .findOrCreate({where: {gitEmail: student.gitEmail}, defaults: {gitName: student.gitName}})
     .then(([student]) => {
-      // const newEvaluation = { ...evaluation, studentId: student.id }
       console.log('student.id :',student.id )
       return student.id 
     })
@@ -99,74 +106,19 @@ Promise.all(promiseArray)
     evaluation = { ...evaluation, studentId }
     console.log('evaluation 2:', evaluation)
 
+    const createQuestion = questionsArray.map(question => {
+      return Exercise
+       .findOne({ where: {name: question.exercise} })  
+       .then( exercise =>  {
+         console.log('exercise:', exercise.id)
+         Question
+          .findOrCreate({ where: { key: question.key, exerciseId: exercise.id } })
+          .then(question => console.log('question:', question))
 
-      // console.log('values', values);
+         return exercise.id
+       })
+     })
     })
-
-
-
-  // Exercise
-  //   .findOrCreate({where: {gitEmail: student.gitEmail}, defaults: {gitName: student.gitName}})  
-
-    // router.post('/items', (req, res, next) => {
-    //   User.create(req.body).then(result => {
-    //     const newItem = { ...req.body, userId: result.dataValues.id }
-    // newItem{
-    //   title:Number,
-    //   dec,
-    //   name:fgf,
-    //   email:dfgd,
-    //   userId
-    // }
-    //     Item
-    //       .create(newItem)
-    //       .then(item => {
-    
-    //         if (!item) {
-    //           return res.status(404).send({
-    //             message: `Item does not exist`
-    //           })
-    //         }
-    //         return res.status(201).send(item)
-    //       })
-    //       .catch(error => {
-    //         console.log(error)
-    //         next(error)
-    //       })
-    //   })
-    // })
-    ///////////////
-  // Evaluation
-  //   .create(evaluation)
-  //   .then(evaluation => {
-  //     if (!evaluation) {
-  //       return res.status(400).send({
-  //         message: `Evaluation has not been created`
-  //       })
-  //     }
-
-  //     Student
-  //       .findByPk(req.body.student_id)
-  //       .then(student => {
-  //         evaluation
-  //           .setStudent(student)
-  //           .then(() => {
-              
-  //             Question
-  //               .findByPk(req.body.question_id)
-  //               .then(question => {
-  //                 evaluation
-  //                   .setQuestion(question)
-  //                   .then(() => {
-  //                     question
-
-  //                     return res.status(201).send(evaluation)
-  //                   })
-  //                 })
-  //             })
-  //         })
-  //     })
-  //   .catch(error => next(error))
   })
 
 module.exports = router

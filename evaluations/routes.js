@@ -7,20 +7,20 @@ const Exercise = require('../exercises/model')
 
 router.get('/evaluations', (req, res, next) => {
   Evaluation
-    .findAll(   
-      {include: [{ model: Student, attributes: [
-        ['git_name', 'gitName']
-      ]} , { model: Question }]
+  .findAll(   
+    {include: [{ model: Student, attributes: [
+      ['git_name', 'gitName']
+    ]} , { model: Question }]
     , order:[['updatedAt', 'DESC']]})
     .then(evaluations => {
       res.send({ evaluations })
     })
     .catch(error => next(error))
-})
-
-router.get('/evaluations/:id', (req, res, next) => {
-  const id = req.params.id
-  Evaluation
+  })
+  
+  router.get('/evaluations/:id', (req, res, next) => {
+    const id = req.params.id
+    Evaluation
     .findByPk(id)
     .then(evaluation => {
       if (!evaluation) {
@@ -31,94 +31,85 @@ router.get('/evaluations/:id', (req, res, next) => {
       return res.send(evaluation)
     })
     .catch(error => next(error))
-})
-
-
-router.post('/evaluations', (req, res, next) => {
-  const day = req.body.day
-  const student = {
-    gitName:req.body.gitName,
-    gitEmail: req.body.gitEmail
-  }
-
-  let attemptsCount = 1
-  let studentId = null
-
-
-   evaluation = {
-        // passed,
-        // attempted,
-        attemptsCount,
-        studentId,
-        //questionId
+  })
+  
+  
+  router.post('/evaluations', (req, res, next) => {
+    const day = req.body.day
+    const student = {
+      gitName:req.body.gitName,
+      gitEmail: req.body.gitEmail
+    }
+    
+    const evaluationArray = JSON.parse(JSON.stringify(req.body.evaluation))
+    
+    const exercisesArray = evaluationArray.map(question => {
+      return question.exercise
+    })
+    
+    const questionsArray = evaluationArray.map(question => {
+      return {
+        exercise: question.exercise,
+        attempted:question.attempted,
+        passed: question.passed,
+        key: question.key
       }
-  console.log('evaluation 1:', evaluation)
-  console.log("req.body.evaluation:", req.body.evaluation)
-
-  const evaluationArray = JSON.parse(JSON.stringify(req.body.evaluation))
-
-  const exercisesArray = evaluationArray.map(question => {
-    return question.exercise
-  })
-
-  const questionsArray = evaluationArray.map(question => {
-    return {
-      exercise: question.exercise,
-      key: question.key
-      }
-  })
-
-  console.log('questionsArray', questionsArray)
-
-  const exercisesUnique = exercisesArray.filter(function(question, index){
-    return exercisesArray.indexOf(question) >= index;
-})
-
-// console.log('exercisesUnique:', exercisesUnique)
-
-//Writing the exercise name to the db
-const createExercise = exercisesUnique.map(exercise => {
- return Exercise
-  .findOrCreate({ where: {name: exercise, packageVersion: day} })  
-  .then( exercise =>  {
-    // console.log('exercise:', exercise)
-    return exercise
-  })
-})
-
-
-// console.log('createExercise array:', createExercise)
-
-//Writing the student info to the db
-const createStudent = Student
+    })
+    
+    const exercisesUnique = exercisesArray.filter(function(question, index){
+      return exercisesArray.indexOf(question) >= index;
+    })
+    
+    //Writing the exercise name to the db
+    const createExercise = exercisesUnique.map(exercise => {
+      return Exercise
+      .findOrCreate({ where: {name: exercise, packageVersion: day} })  
+      .then( exercise =>  {
+        return exercise
+      })
+    })
+    
+    
+    //Writing the student info to the db
+    const createStudent = Student
     .findOrCreate({where: {gitEmail: student.gitEmail}, defaults: {gitName: student.gitName}})
     .then(([student]) => {
-      console.log('student.id :',student.id )
       return student.id 
     })
     .catch(next)
+    
+    const promiseArray = [createStudent, ...createExercise ]
+    
+    Promise.all(promiseArray)
+    .then(values => {
+      const studentId = values[0] 
+      let evaluation = { studentId }
+      
+      const createQuestion = questionsArray.map(question => {
+        return Exercise
+        .findOne({ where: {name: question.exercise} })  
+        .then( exercise =>  {
 
-const promiseArray = [createStudent, ...createExercise ]
-
-Promise.all(promiseArray)
-  .then(values => {
-    const studentId = values[0] 
-    evaluation = { ...evaluation, studentId }
-    console.log('evaluation 2:', evaluation)
-
-    const createQuestion = questionsArray.map(question => {
-      return Exercise
-       .findOne({ where: {name: question.exercise} })  
-       .then( exercise =>  {
-         console.log('exercise:', exercise.id)
-         Question
+          Question
           .findOrCreate({ where: { key: question.key, exerciseId: exercise.id } })
-          .then(question => console.log('question:', question))
-
-         return exercise.id
-       })
-     })
+          .then(createdQuestion => {
+            evaluation = { 
+              ...evaluation,
+              passed:question.passed,
+              attempted: question.attempted,
+              questionId: createdQuestion[0].id 
+            }
+            
+            Evaluation
+            .create(evaluation)
+            .then(newEvaluation =>  newEvaluation)
+          })
+          
+          return createQuestion
+        })
+        .catch(error => next(error))
+      })
     })
   })
-
-module.exports = router
+  
+  module.exports = router

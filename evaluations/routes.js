@@ -71,7 +71,7 @@ router.get('/evaluations', (req, res, next) => {
         .then( results => {
           //map over evaluationArray and gets questions id 
           const repeatedQuestion = results.map( result => {
-            return result[0].dataValues.questionId
+            return result[0].dataValues.question.key[1]
             })
             console.log('repeatedQuestion:', repeatedQuestion)
           //make sure there is no repeating questions
@@ -80,14 +80,14 @@ router.get('/evaluations', (req, res, next) => {
             console.log('distictQuestions:', distictQuestions)
 
           //map over questions id and for each question filter only the passed
-          const passedPerQuestion = distictQuestions.map(distinctQuestionId => {
+          const passedPerQuestion = distictQuestions.map(distinctQuestionKey => {
             const filtered = results.filter(evaluation =>  {
-            return evaluation[0].dataValues.questionId === distinctQuestionId
+            return evaluation[0].dataValues.question.key[1] === distinctQuestionKey
               && 
               evaluation[0].dataValues.passed === true
             })
             //return an object with qustion id and number of students who passed
-            return { questionId: distinctQuestionId,
+            return { questionKey: distinctQuestionKey,
                     studentsPassed: filtered.length}
           })
            return res.send({ passedPerQuestion })

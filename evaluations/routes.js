@@ -75,7 +75,7 @@ router.get('/evaluations', (req, res, next) => {
             })
             console.log('repeatedQuestion:', repeatedQuestion)
           //make sure there is no repeating questions
-          const distictQuestions = [...new Set(repeatedQuestion)]
+          const distictQuestions = [...new Set(repeatedQuestion.sort())]
 
             console.log('distictQuestions:', distictQuestions)
 

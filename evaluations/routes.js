@@ -41,6 +41,62 @@ router.get('/evaluations', (req, res, next) => {
       .catch(error => next(error))
   })
 
+  router.get('/evaluations-by-question', (req, res, next) => {
+    Evaluation
+    .findAll({attributes:[['studentId','studentId'], ['questionId','questionId']],
+      group: ['studentId','questionId'],
+      order:[['studentId', 'ASC'],['questionId', 'ASC'],],
+     })
+     .then(evaluations => {
+        const evaluationArray =  evaluations.map(evaluation => {
+          return Evaluation
+            .findAll({
+              include: [ {model: Student},
+                {model: Question, include: [Exercise]} 
+               ],
+              limit: 1,
+              where: {
+                studentId: evaluation.studentId,
+                questionId: evaluation.questionId
+              },
+              order: [ [ 'createdAt', 'DESC' ]]
+            })
+            .then(fullEvaluation => {
+              return fullEvaluation
+            })
+            .catch(error => next(error)) 
+        })
+  
+        Promise.all(evaluationArray)
+        .then( results => {
+          //map over evaluationArray and gets questions id 
+          const repeatedQuestion = results.map( result => result[0].dataValues.questionId)
+          //make sure there is no repeating questions
+          const distictQuestions = [...new Set(repeatedQuestion)]
+
+          //map over questions id and for each question filter only the passed
+          const passedPerQuestion = distictQuestions.map(distinctQuestionId => {
+            const filtered = results.filter(evaluation =>  {
+            return evaluation[0].dataValues.questionId === distinctQuestionId
+             && 
+              evaluation[0].dataValues.passed === true
+            })
+            //return an object with qustion id and number of students who passed
+            return { questionId: distinctQuestionId,
+                    studentsPassed: filtered.length}
+          })
+           return res.send({ passedPerQuestion })
+        })
+        .catch(error => next(error))   
+      })
+        .catch(error => next(error))
+    })
+
+    // const totalPassedQuestions =  results.filter(evaluation => {
+    //   // console.log('filter evaluation:', evaluation[0].dataValues.passed)
+    //   return evaluation[0].dataValues.passed === true})
+
+
   router.get('/all-evaluations', (req, res, next) => {
     Evaluation
     .findAll({

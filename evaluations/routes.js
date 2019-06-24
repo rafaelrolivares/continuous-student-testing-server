@@ -7,16 +7,53 @@ const Exercise = require('../exercises/model')
 
 router.get('/evaluations', (req, res, next) => {
   Evaluation
-  .findAll(   
-    {include: [{ model: Student, attributes: [
-      ['git_name', 'gitName']
-    ]} , { model: Question }]
-    , order:[['updatedAt', 'DESC']]})
-    .then(evaluations => {
-      res.send({ evaluations })
+  .findAll({attributes:[['studentId','studentId'], ['questionId','questionId']],
+    group: ['studentId','questionId'],
+    order:[['studentId', 'ASC'],['questionId', 'ASC'],],
+   })
+   .then(evaluations => {
+      const evaluationArray =  evaluations.map(evaluation => {
+        return Evaluation
+          .findAll({
+            include: [ {model: Student},
+              {model: Question, include: [Exercise]} 
+             ],
+            limit: 1,
+            where: {
+              studentId: evaluation.studentId,
+              questionId: evaluation.questionId
+            },
+            order: [ [ 'createdAt', 'DESC' ]]
+          })
+          .then(fullEvaluation => {
+            return fullEvaluation
+          })
+          .catch(error => next(error)) 
+      })
+
+      Promise.all(evaluationArray)
+      .then( () => {
+         return res.send({ 
+        evaluationArray })
+      })
+      .catch(error => next(error))   
     })
-    .catch(error => next(error))
+      .catch(error => next(error))
   })
+
+  router.get('/all-evaluations', (req, res, next) => {
+    Evaluation
+    .findAll({
+      include: [ {model: Student},
+         {model: Question, include: [Exercise]} 
+        ]
+      , order:[['createdAt', 'DESC']]
+    })
+      .then(evaluations => {
+        res.send({ evaluations })
+      })
+      .catch(error => next(error))
+  }) 
   
   router.get('/evaluations/:id', (req, res, next) => {
     const id = req.params.id

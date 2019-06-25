@@ -14,7 +14,6 @@ const Exercise = sequelize.define('exercises', {
 },{
   timestamps: false,
   tableName: 'exercises'
-
 })
 
 module.exports = Exercise

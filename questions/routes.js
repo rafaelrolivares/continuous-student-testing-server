@@ -26,12 +26,27 @@ router.post('/questions', (req, res, next) => {
 })
 
 router.get('/questions', (req, res, next) => { 
-  Question.findAll({order:[['id', 'ASC']]})
-  .then(questions => {
-    res.json({ questions: questions })
+  const limit = req.query.limit || 25
+  const offset = req.query.offset || 0
+
+  Promise.all([
+    Question.count(),
+    Question.findAll({ 
+      limit,
+      offset, 
+      order: [['id', 'ASC']]
+     }),
+  ])
+    .then(([total, questions]) => {
+      res.send({
+        questions, total
+      })
+      .then(questions => {
+        res.json({ questions: questions })
+      })
+      .catch(error => next(error))
+    })
   })
-  .catch(error => next(error))
-}) 
 
 router.get('/questions/:id', (req, res) => {
   const id = req.params.id

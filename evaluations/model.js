@@ -23,4 +23,5 @@ Evaluation.belongsTo(Student)
 Student.hasMany(Evaluation)
 Evaluation.belongsTo(Question)
 Question.hasMany(Evaluation)
+
 module.exports = Evaluation

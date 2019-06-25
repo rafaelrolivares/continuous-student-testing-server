@@ -20,4 +20,4 @@ function onListen() {
   console.log(`Running on port ${port}`)
 }
 
-app.listen(port, onListen)
+app.listen(port, onListen);

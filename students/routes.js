@@ -25,12 +25,27 @@ router.post('/students', (req, res, next) => {
 })
 
 router.get('/students', (req, res, next) => { 
-  Student.findAll({order:[['id', 'ASC']]})
-  .then(students => {
-    res.json({ students: students })
+  const limit = req.query.limit || 25
+  const offset = req.query.offset || 0
+
+  Promise.all([
+    Student.count(),
+    Student.findAll({ 
+      limit,
+      offset, 
+      order: [['id', 'ASC']]
+     }),
+  ])
+    .then(([total, students]) => {
+      res.send({
+        students, total
+      })
+      .then(students => {
+        res.json({ students: students })
+      })
+      .catch(error => next(error))
+    })
   })
-  .catch(error => next(error))
-}) 
 
 router.get('/students/:id', (req, res) => {
   const id = req.params.id

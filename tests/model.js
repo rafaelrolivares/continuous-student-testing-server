@@ -14,10 +14,6 @@ const Test = sequelize.define('tests', {
 },{
   timestamps: false,
   tableName: 'tests'
-<<<<<<< HEAD
-=======
-
->>>>>>> 132c391ecbced69c19cc78c818ad0deedcf7b4a2
 })
 
 module.exports = Test

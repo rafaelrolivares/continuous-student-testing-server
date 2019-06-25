@@ -12,6 +12,12 @@ const Student = sequelize.define('students', {
     field: 'git_email',
     allowNull: false
   }
+  // classNumber: {
+  //   type: Sequelize.INTEGER,
+  //      field: 'class_number',
+  //   allowNull: false
+  // }
+
 },
   { timestamps: false }
 )

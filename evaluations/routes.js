@@ -71,17 +71,20 @@ router.get('/evaluations', (req, res, next) => {
         .then( results => {
           //map over evaluationArray and gets questions id 
           const repeatedQuestion = results.map( result => {
+
+            // return result[0].dataValues.question.key
             return result[0].dataValues.question.key[1]
             })
-            console.log('repeatedQuestion:', repeatedQuestion)
+            // console.log('repeatedQuestion:', repeatedQuestion)
           //make sure there is no repeating questions
-          const distictQuestions = [...new Set(repeatedQuestion.sort())]
+          const distinctQuestions = [...new Set(repeatedQuestion.sort().reverse())]
 
-            console.log('distictQuestions:', distictQuestions)
+            // console.log('distinctQuestions:', distinctQuestions)
 
           //map over questions id and for each question filter only the passed
-          const passedPerQuestion = distictQuestions.map(distinctQuestionKey => {
+          const passedPerQuestion = distinctQuestions.map(distinctQuestionKey => {
             const filtered = results.filter(evaluation =>  {
+            // return evaluation[0].dataValues.question.key === distinctQuestionKey
             return evaluation[0].dataValues.question.key[1] === distinctQuestionKey
               && 
               evaluation[0].dataValues.passed === true
@@ -97,46 +100,61 @@ router.get('/evaluations', (req, res, next) => {
         .catch(error => next(error))
     })
 
-    //attemp to bring question key as well:
-    // Promise.all(evaluationArray)
-    //     .then( results => {
-    //       //map over evaluationArray and gets questions id 
-    //       const repeatedQuestion = results.map( result => {
-    //         return result[0].dataValues.questionId
-    //         })
-
-    //         console.log('repeatedQuestion:', repeatedQuestion)
-    //       //make sure there is no repeating questions
-    //       const distictQuestions = [...new Set(repeatedQuestion)]
-    //         // const distictQuestions = [...new Set(
-    //         //   {
-    //         //     questionId: repeatedQuestion.questionId,
-    //         //     questionKey: repeatedQuestion.questionKey
-    //         //   }
-    //         //   )]
-
-    //         console.log('distictQuestions:', distictQuestions)
-
-    //       //map over questions id and for each question filter only the passed
-    //       const passedPerQuestion = distictQuestions.map(distinctQuestionId => {
-    //         const filtered = results.filter(evaluation =>  {
-    //         return evaluation[0].dataValues.questionId === distinctQuestionId
-    //           && 
-    //           evaluation[0].dataValues.passed === true
-    //           &&
-    //           evaluation[0].dataValues.question.key[1]
-
-    //         })
-    //         //return an object with qustion id and number of students who passed
-    //         return { questionId: distinctQuestionId,
-    //                   questionKey: filtered[0].key,
-    //                 studentsPassed: filtered.length}
-    //       })
-    //        return res.send({ passedPerQuestion })
-    //     })
-    // const totalPassedQuestions =  results.filter(evaluation => {
-    //   // console.log('filter evaluation:', evaluation[0].dataValues.passed)
-    //   return evaluation[0].dataValues.passed === true})
+    router.get('/evaluations-by-student', (req, res, next) => {
+      Evaluation
+      .findAll({attributes:[['studentId','studentId'], ['questionId','questionId']],
+        group: ['studentId','questionId'],
+        order:[['studentId', 'ASC'],['questionId', 'ASC'],],
+       })
+       .then(evaluations => {
+          const evaluationArray =  evaluations.map(evaluation => {
+            return Evaluation
+              .findAll({
+                include: [ {model: Student},
+                  {model: Question, include: [Exercise]} 
+                 ],
+                limit: 1,
+                where: {
+                  studentId: evaluation.studentId,
+                  questionId: evaluation.questionId
+                },
+                order: [ [ 'createdAt', 'DESC' ]]
+              })
+              .then(fullEvaluation => {
+                return fullEvaluation
+              })
+              .catch(error => next(error)) 
+          })
+    
+          Promise.all(evaluationArray)
+          .then( results => {
+            //map over evaluationArray and gets students gitName
+            const repeatedStudents = results.map( result => {
+              return result[0].dataValues.student.gitName
+              })
+              console.log('repeatedStudents:', repeatedStudents)
+            //make sure there is no repeating students
+            const distinctStudent = [...new Set(repeatedStudents.sort())]
+  
+              console.log('distinctStudent:', distinctStudent)
+  
+            //map over students name and for each student filter only the passed
+            const passedPerStudent = distinctStudent.map(distinctStudentName => {
+              const filtered = results.filter(evaluation =>  {
+              return evaluation[0].dataValues.student.gitName === distinctStudentName
+                && 
+                evaluation[0].dataValues.passed === true
+              })
+              //return an object with student gitName and number of questions passed
+              return { studentName: distinctStudentName,
+                      questionsPassed: filtered.length}
+            })
+             return res.send({ passedPerStudent })
+          })
+          .catch(error => next(error))   
+        })
+          .catch(error => next(error))
+      })
 
 
   router.get('/all-evaluations', (req, res, next) => {

@@ -1,4 +1,4 @@
-ççCopy/paste the following in the terminal, when you need mock data.
+Copy/paste the following in the terminal, when you need mock data.
 
 http :4000/students gitName=andrea gitEmail=andrea@github.com
 http :4000/students gitName=keren gitEmail=keren@github.com

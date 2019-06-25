@@ -1,7 +1,7 @@
 const Sequelize = require('sequelize')
 const sequelize = require('../db')
 
-const Test = sequelize.define('tests', {
+const Exercise = sequelize.define('exercises', {
   name: {
     type: Sequelize.STRING,
     allowNull: true
@@ -9,11 +9,11 @@ const Test = sequelize.define('tests', {
   packageVersion: {
     type: Sequelize.STRING,
     field: 'package_version',
-    allowNull: false
+    allowNull: true
   }
 },{
   timestamps: false,
-  tableName: 'tests'
+  tableName: 'exercises'
 })
 
-module.exports = Test
+module.exports = Exercise

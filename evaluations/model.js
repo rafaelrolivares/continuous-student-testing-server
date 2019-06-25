@@ -13,11 +13,6 @@ const Evaluation = sequelize.define('evaluations', {
     type: Sequelize.BOOLEAN,
     allowNull: false,
     defaultValue: false
-  },
-  attemptsCount: {
-    type: Sequelize.INTEGER,
-    field: 'attempts_count',
-    allowNull: false
   }
 }, {
   tableName: 'evaluations',

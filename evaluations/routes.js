@@ -75,8 +75,8 @@ router.get('/evaluations-by-question', (req, res, next) => {
           //map over evaluationArray and gets questions id 
           const repeatedQuestion = results.map(result => {
 
-            // return result[0].dataValues.question.key
-            return result[0].dataValues.question.key[1]
+           return result[0].dataValues.question.key
+          //  return result[0].dataValues.question.key[1]
           })
           // console.log('repeatedQuestion:', repeatedQuestion)
           //make sure there is no repeating questions
@@ -87,8 +87,8 @@ router.get('/evaluations-by-question', (req, res, next) => {
           //map over questions id and for each question filter only the passed
           const passedPerQuestion = distinctQuestions.map(distinctQuestionKey => {
             const filtered = results.filter(evaluation => {
-              // return evaluation[0].dataValues.question.key === distinctQuestionKey
-              return evaluation[0].dataValues.question.key[1] === distinctQuestionKey
+             return evaluation[0].dataValues.question.key === distinctQuestionKey
+            //  return evaluation[0].dataValues.question.key[1] === distinctQuestionKey
                 &&
                 evaluation[0].dataValues.passed === true
             })

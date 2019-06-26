@@ -76,23 +76,23 @@ router.get('/evaluations-by-question', (req, res, next) => {
           const repeatedQuestion = results.map(result => {
 
            return result[0].dataValues.question.key
+           //option for only sending the question letter ( [A],[b],[c]...):
           //  return result[0].dataValues.question.key[1]
           })
-          // console.log('repeatedQuestion:', repeatedQuestion)
           //make sure there is no repeating questions
           const distinctQuestions = [...new Set(repeatedQuestion.sort().reverse())]
 
-          // console.log('distinctQuestions:', distinctQuestions)
 
           //map over questions id and for each question filter only the passed
           const passedPerQuestion = distinctQuestions.map(distinctQuestionKey => {
             const filtered = results.filter(evaluation => {
              return evaluation[0].dataValues.question.key === distinctQuestionKey
+            //option for only sending the question letter ( [A],[b],[c]...):
             //  return evaluation[0].dataValues.question.key[1] === distinctQuestionKey
                 &&
                 evaluation[0].dataValues.passed === true
             })
-            //return an object with qustion id and number of students who passed
+            //return an object with qustion key and number of students who passed
             return {
               questionKey: distinctQuestionKey,
               studentsPassed: filtered.length
@@ -138,11 +138,9 @@ router.get('/evaluations-by-student', (req, res, next) => {
           const repeatedStudents = results.map(result => {
             return result[0].dataValues.student.gitName
           })
-          console.log('repeatedStudents:', repeatedStudents)
           //make sure there is no repeating students
           const distinctStudent = [...new Set(repeatedStudents.sort())]
 
-          console.log('distinctStudent:', distinctStudent)
 
           //map over students name and for each student filter only the passed
           const passedPerStudent = distinctStudent.map(distinctStudentName => {
@@ -196,11 +194,8 @@ router.get('/evaluations-by-student', (req, res, next) => {
               const repeatedStudents = results.map( result => {
                 return result[0].dataValues.student.gitName
                 })
-                console.log('repeatedStudents:', repeatedStudents)
               //make sure there is no repeating students
               const distinctStudent = [...new Set(repeatedStudents.sort())]
-    
-                console.log('distinctStudent:', distinctStudent)
     
               //map over students name and for each student filter only the passed
               const attemptedPerStudent = distinctStudent.map(distinctStudentName => {
@@ -365,11 +360,9 @@ router.get('/evaluations-by-question-student', (req, res, next) => {
       Promise.all(evaluationArray)
         .then(results => {
           const passedTotal = results.filter(evaluation => {
-            // console.log('evaluation', evaluation)
             return evaluation[0].dataValues.passed === true
           })
           const questionsPassed = passedTotal.length
-          console.log('questionsPassed', questionsPassed)
           return questionsPassed
 
             .then(
@@ -378,7 +371,6 @@ router.get('/evaluations-by-question-student', (req, res, next) => {
                 Question.count()
               ])
                 .then(([students, questions]) => {
-                  console.log(students, questions, questionsPassed)
                   res.send({ students, questions, questionsPassed })
                 })
                 .catch(error => next(error))   

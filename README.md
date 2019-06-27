@@ -8,7 +8,13 @@ This app shows student progress in data transformation exercises in real time. I
 
 To install and run this app:
 
-For testing purposes you must have a PostgreSQL database running (and point to it on line 2 of file 'db.js'). If you use Docker, [here](https://docs.docker.com/engine/reference/commandline/start/) is how to do it.
+Currently the server is deployed to Heroku on https://continuous-testing.herokuapp.com/
+
+**config vars**
+
+The DATABASE_URL for Heroku is *postgres://uprirxcxkbrpkr:b238047354a4f0263aefbce4feccd3a4701cb9bda07d0cad427060b330da7466@ec2-54-246-84-100.eu-west-1.compute.amazonaws.com:5432/d98eep4745c0lc*
+
+For testing purposes we recommend having a local PostgreSQL database running (and point to it on line 2 of file [db.js](https://github.com/rafaelrolivares/continuous-student-testing-server/blob/master/db.js) ). If you use Docker, [here](https://docs.docker.com/engine/reference/commandline/start/) is how to do it.
 
 Once it is up and running, go to the terminal and run the following commands:
 

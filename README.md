@@ -6,7 +6,7 @@ This app shows student progress in data transformation exercises in real time. I
 
 ### `installation`
 
-To install this app, run git clone and npm install.
+To install this app, run git clone and npm install. For the project to run locally, it needs a database (currently set to Heroku) and this server must be running on node.
 
 ### `client side`
 

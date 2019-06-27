@@ -11,6 +11,10 @@ const app = express()
 
 const port = process.env.PORT || 4000
 
+
+// Heroku url: https://continuous-testing.herokuapp.com/ | https://git.heroku.com/continuous-testing.git
+// Created postgresql-rigid-49293 as DATABASE_URL
+
 app
   .use(cors())
   .use(bodyParser.json())

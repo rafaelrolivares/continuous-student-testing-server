@@ -25,7 +25,7 @@ The front end of the app is available [here](https://github.com/ajvanliere/Conti
 
 The exercises and jest tests are available [here](https://github.com/kerenKi/dataTransFormationExercises).
 
-### API documentation
+### API endpoints
 
 The current base URL is https://continuous-testing.herokuapp.com/.
 

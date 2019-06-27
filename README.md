@@ -6,7 +6,7 @@ This app shows student progress in data transformation exercises in real time. I
 
 ### `installation`
 
-npm install
+To install this app, run git clone and npm install.
 
 ### `client side`
 

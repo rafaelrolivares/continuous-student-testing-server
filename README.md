@@ -19,8 +19,25 @@ $ npm install
 $ nodemon .
 // nodemon will restart the app after every saved changes.
 ```
-Important note: if you submit mock data to test using httpie, it will not work. We recommend posting using axios or superagent.
+<b>Important note</b>: if you submit mock data to test using httpie, it will not work. We recommend posting using axios or superagent.
 
 The front end of the app is available [here](https://github.com/ajvanliere/Continuous-Testing-Client/).
 
 The exercises and jest tests are available [here](https://github.com/kerenKi/dataTransFormationExercises).
+
+### API documentation
+
+The current base URL is https://continuous-testing.herokuapp.com/.
+
+To get all students: https://continuous-testing.herokuapp.com/students.
+
+To get all exercise groups: https://continuous-testing.herokuapp.com/exercises.
+
+To get all questions: https://continuous-testing.herokuapp.com/questions.
+
+To get all evaluations: https://continuous-testing.herokuapp.com/evaluations.
+
+To get how many students have a passing result for each question: https://continuous-testing.herokuapp.com/evaluations-by-question.
+
+To get how many questions each student has passed: https://continuous-testing.herokuapp.com/evaluations-by-student.
+

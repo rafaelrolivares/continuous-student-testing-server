@@ -1,4 +1,4 @@
-### `continuous-student-testing-server`
+### `continuous-student-testing-server` :green_book: :pencil2: :man_student: :woman_student:
 
 A group project to aggregate student test results in real time. Server side, based on Express and Sequelize.
 
